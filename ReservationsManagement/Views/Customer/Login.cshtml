@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Login | Reg";
+    Layout = "CustomerLayout";
+}
+
+@if (ViewBag.IsLogin == true)
+{
+    <partial name="/Views/Shared/HeaderCustomer.cshtml" />
+}
+else
+{
+    <partial name="/Views/Shared/HeaderGuest.cshtml" />
+}
+<!--=============================
+        BREADCRUMB START
+    ==============================-->
+<section class="page_breadcrumb" style="background: url(images/counter_bg.jpg);">
+    <div class="breadcrumb_overlay">
+        <div class="container">
+            <div class="breadcrumb_text">
+                <h1>sign in</h1>
+                <ul>
+                    <li><a href="/customer/home">home</a></li>
+                    <li><a href="#">sign in</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!--=============================
+    BREADCRUMB END
+==============================-->
+<!--=========================
+    SIGNIN START
+==========================-->
+@{
+    ViewData["Title"] = "Login";
+}
+<section class="signin pt_100 xs_pt_70 pb_100 xs_pb_70">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-sm-10 col-md-8 col-lg-6">
+                <div class="login_area">
+                    <h2>Welcome back!</h2>
+                    <p>Sign in to continue</p>
+
+                    @if (ViewBag.Message != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Message</div>
+                    }
+
+                    <form method="post" action="/customer/authenticate/login">
+                        <div class="login_input">
+                            <input type="text" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="login_input">
+                            <input type="password" name="password" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="common_btn">Login</button>
+                    </form>
+
+                    <p class="or"><span>or</span></p>
+                    <p class="create_account">
+                        Don’t have an account? <a href="/customer/authenticate/register">Create Account</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--=========================
+    SIGNIN END
+==========================-->

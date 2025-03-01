@@ -1,0 +1,102 @@
+﻿@{
+    ViewData["Title"] = "Dashboard | Reg";
+    Layout = "AdminLayout";
+}
+
+@{
+    var orders = ViewBag.OrderList as List<ReservationsManagement.Models.Order> ?? new List<ReservationsManagement.Models.Order>();
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        <strong>Error:</strong> @ViewBag.ErrorMessage
+    </div>
+}
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="container-scroller">
+    <partial name="/Views/Shared/HeaderAdmin.cshtml" />
+
+    <partial name="/Views/Shared/LeftPageAdmin.cshtml" />
+
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Order List</h4>
+                        <p class="card-description">
+                            Add class <code>.table-striped</code>
+                        </p>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer Name</th>
+                                        <th>Phone Receiver</th>
+                                        <th>Time</th>
+                                        <th>Date</th>
+                                        <th>Number of Persons</th>
+                                        <th>Number of Children</th>
+                                        <th>Total Price</th>
+                                        <th>Status</th>
+                                        <th>Change Status</th>
+                                        <th>Detail</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in orders)
+                                    {
+                                        <tr>
+                                            <td>@order.CustomerId</td>
+                                            <td>@(order.Customer?.Name ?? "Unknown")</td>
+                                            <td>@order.PhoneReceiver</td>
+                                            <td>@order.Time</td>
+                                            <td>@order.Date.ToString("yyyy-MM-dd")</td>
+                                            <td>@order.NumberPerson</td>
+                                            <td>@order.NumberChild</td>
+                                            <td>@order.TotalPrice</td>
+                                            <td><span class="badge badge-@(order.StatusOrder == "Pending" ? "warning" : "success")">@order.StatusOrder</span></td>
+                                            <td>
+                                                @if (order.StatusOrder == "Pending")
+                                                {
+                                                    <form asp-action="ChangeOrderStatus" asp-controller="Restaurant" method="post">
+                                                        <input type="hidden" name="orderId" value="@order.OrderId" />
+                                                        <button type="submit" class="btn btn-sm btn-primary">Accept</button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-success">Accepted</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("OrderDetail", "Restaurant", new { orderId = order.OrderId })" class="btn btn-sm btn-info">
+                                                    View Details
+                                                </a>
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+</div>

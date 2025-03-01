@@ -1,0 +1,149 @@
+﻿@model ReservationsManagement.DTO.CustomerDTO
+
+@{
+    ViewData["Title"] = "Edit_Profile | Reg";
+    Layout = "CustomerLayout";
+}
+
+@if (ViewBag.IsLogin == true)
+{
+    <partial name="/Views/Shared/HeaderCustomer.cshtml" />
+}
+else
+{
+    <partial name="/Views/Shared/HeaderGuest.cshtml" />
+}
+<!--=============================
+        BREADCRUMB START
+    ==============================-->
+<section class="page_breadcrumb" style="background: url(images/counter_bg.jpg);">
+    <div class="breadcrumb_overlay">
+        <div class="container">
+            <div class="breadcrumb_text">
+                <h1>user dashboard</h1>
+                <ul>
+                    <li><a href="index.html">home</a></li>
+                    <li><a href="#">dashboard</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!--=============================
+    BREADCRUMB END
+==============================-->
+<!--=========================
+    DASHBOARD START
+==========================-->
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+<section class="dashboard mt_100 xs_mt_70 mb_100 xs_mb_70">
+    <div class="container">
+        <div class="dashboard_area">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 wow fadeInUp" data-wow-duration="1s">
+                    <div class="dashboard_menu">
+                        <div class="dasboard_header">
+                            <div class="dasboard_header_img">
+                                <img src="@Model.Customer.Image" alt="user" class="img-fluid w-100">
+                                <label for="upload"><i class="far fa-camera"></i></label>
+                                <input type="file" id="upload" hidden>
+                            </div>
+                            <h2>@Model.Customer.Name</h2>
+                        </div>
+                        <ul>
+
+                            <li>
+                                <a href="/customer/profile"><span><i class="fas fa-user"></i></span>Info</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("OrderList", "Customer")">
+                                    <span><i class="fas fa-bags-shopping"></i></span>
+                                    Order
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="dashboard_review.html"><span><i class="fas fa-star"></i></span> Reviews</a>
+                            </li>
+                            <li>
+                                <a href="dashboard_change_password.html">
+                                    <span>
+                                        <i class="fas fa-user-lock"></i>
+                                    </span> Change Password
+                                </a>
+                            </li>
+                            <li><a href="/customer/logout"><span> <i class="fas fa-sign-out-alt"></i></span> Logout</a></li>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xl-9 col-lg-8 wow fadeInUp" data-wow-duration="1s">
+                    <div class="dashboard_content">
+                        <div class="dashboard_body">
+                            <h3>
+                                Edit information<a class="dash_add_new_address" href="/customer/profile">Cancel</a>
+                            </h3>
+                            <form method="post" action="/customer/profile/edit" enctype="multipart/form-data">
+                                <div class="dash_personal_info">
+                                    <div class="dash_personal_info_edit comment_input p-0 mb_0">
+                                        <input type="hidden" name="id" value="@Model.Customer.CustomerId">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="comment_imput_single">
+                                                    <label>Name</label>
+                                                    <input type="text" name="name" value="@Model.Customer.Name" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6">
+                                                <div class="comment_imput_single">
+                                                    <label>Email</label>
+                                                    <input type="email" name="email" value="@Model.Customer.Email" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6">
+                                                <div class="comment_imput_single">
+                                                    <label>Phone</label>
+                                                    <input type="text" name="phone" value="@Model.Customer.Phone" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6">
+                                                <div class="comment_imput_single">
+                                                    <label>Gender</label>
+                                                    <select asp-for="Customer.Gender" asp-items="Model.GenderList" class="form-control">
+                                                        <option value="">-- Select Gender --</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-12">
+                                                <div class="comment_imput_single">
+                                                    <label>Date of Birth</label>
+                                                    <input type="date" name="dob" value="@Model.Customer.Dob?.ToString("yyyy-MM-dd")" required>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-xl-12">
+                                                <div class="comment_imput_single">
+                                                    <label>Profile Picture</label>
+                                                    <input type="file" name="fileUpload">
+                                                </div>
+
+                                            </div>
+                                            <button type="submit" class="common_btn">submit</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--=========================
+    DASHBOARD END
+==========================-->

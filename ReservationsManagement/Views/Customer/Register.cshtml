@@ -1,0 +1,107 @@
+﻿@{
+    ViewData["Title"] = "Register | Reg";
+    Layout = "CustomerLayout";
+}
+@if (ViewBag.IsLogin == true)
+{
+    <partial name="/Views/Shared/HeaderCustomer.cshtml" />
+}
+else
+{
+    <partial name="/Views/Shared/HeaderGuest.cshtml" />
+}
+<!--=============================
+        BREADCRUMB START
+    ==============================-->
+<section class="page_breadcrumb" style="background: url(images/counter_bg.jpg);">
+    <div class="breadcrumb_overlay">
+        <div class="container">
+            <div class="breadcrumb_text">
+                <h1>sign up</h1>
+                <ul>
+                    <li><a href="/customer/home" ">home</a></li>
+                    <li><a href="#">sign up</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!--=============================
+    BREADCRUMB END
+==============================-->
+<!--=========================
+    SIGN UP START
+==========================-->
+@{
+    ViewData["Title"] = "Register";
+}
+<section class="signin pt_100 xs_pt_70 pb_100 xs_pb_70">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-sm-10 col-md-8 col-lg-6">
+                <div class="login_area">
+                    <h2>Welcome!</h2>
+                    <p>Sign up to continue</p>
+
+                    @if (ViewBag.UsernameError != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.UsernameError</div>
+                    }
+                    @if (ViewBag.EmailError != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.EmailError</div>
+                    }
+                    @if (ViewBag.PasswordError != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.PasswordError</div>
+                    }
+                    @if (ViewBag.RepasswordError != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.RepasswordError</div>
+                    }
+
+                    <form asp-action="Register" asp-controller="Customer" method="post">
+
+                        <div class="login_input">
+                            <input type="text" name="name" placeholder="Full Name" required>
+                        </div>
+                        <div class="login_input">
+                            <input type="text" name="phone" placeholder="Phone Number" required>
+                        </div>
+                        <div class="login_input">
+                            <input type="email" name="email" placeholder="Email" required>
+                        </div>
+                        <div class="login_input">
+                            <input type="date" name="dob" required>
+                        </div>
+                        <div class="login_input">
+                            <input type="text" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="login_input">
+                            <input type="password" name="password" placeholder="Password" required>
+                        </div>
+                        <div class="login_input">
+                            <input type="password" name="repassword" placeholder="Confirm Password" required>
+                        </div>
+                        <div class="login_input">
+                            <select name="gender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="common_btn">Sign Up</button>
+                    </form>
+
+                    <p class="or"><span>or</span></p>
+                    <p class="create_account">
+                        Already have an account? <a href="/customer/authenticate/login">Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--=========================
+    SIGN UP END
+==========================-->

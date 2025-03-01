@@ -1,0 +1,122 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Trang Chủ | Reg";
+    Layout = "CustomerLayout";
+}
+
+@if (ViewBag.IsLogin == true)
+{
+    <partial name="/Views/Shared/HeaderCustomer.cshtml" />
+}
+else
+{
+    <partial name="/Views/Shared/HeaderGuest.cshtml" />
+}
+<section class="menu mt_95 xs_mt_65">
+
+<div class="container">
+    <div class="row">
+        <div class="col-xl-6 col-lg-6 wow fadeInUp" data-wow-duration="1s">
+            <div class="section_heading mb_25">
+                <h4>Food Menu</h4>
+                <h2>Popular Delicious Foods</h2>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 wow fadeInUp" data-wow-duration="1s">
+            <div class="menu_filter d-flex flex-wrap">
+                <button class="active" data-filter="*">All Menu</button>
+                @if (ViewBag.CategoryMenuList != null && ViewBag.CategoryMenuList.Count > 0)
+                {
+                    foreach (var category in ViewBag.CategoryMenuList as List<ReservationsManagement.Models.CategoryMenu>)
+                    {
+                        <button data-filter=".@category.CategoryMenuName?.ToLower().Replace(" ", "-")">@category.CategoryMenuName</button>
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row grid">
+        @if (ViewBag.MenuList != null && ViewBag.MenuList.Count > 0)
+        {
+            foreach (var item in ViewBag.MenuList as List<ReservationsManagement.Models.Menu>)
+            {
+                <div class="col-xxl-3 col-sm-6 col-lg-4 @item.CategoryMenu?.CategoryMenuName?.ToLower() wow fadeInUp" data-wow-duration="1s">
+                    <div class="menu_item">
+                        <div class="menu_item_img">
+                            <img src="@(!string.IsNullOrEmpty(item.Image) ? item.Image : "/images/default_food.jpg")" alt="menu" class="img-fluid w-100">
+                        </div>
+                        <div class="menu_item_text">
+                            <a class="category" href="#">@(item.CategoryMenu?.CategoryMenuName ?? "N/A")</a>
+                            <a class="title" href="/customer/menu/details?id=@item.MenuId">@item.DishName</a>
+
+                            <p class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                                <span>24</span>
+                            </p>
+                            <h5 class="price">$@item.Price.ToString("0.00")</h5>
+                            <a class="add_to_cart" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
+                                Add to cart
+                            </a>
+                            <ul class="d-flex flex-wrap justify-content-end">
+                                <li><a href="#"><i class="fal fa-heart"></i></a></li>
+                                <li><a href="/customer/menu/details?id=@item.MenuId"><i class="far fa-eye"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <p>Không có món ăn nào trong hệ thống.</p>
+            </div>
+        }
+    </div>
+</div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let buttons = document.querySelectorAll(".menu_filter button");
+        let items = document.querySelectorAll(".grid .menu_item");
+
+        buttons.forEach(button => {
+            button.addEventListener("click", function () {
+                let filter = this.getAttribute("data-filter").replace(".", "");
+
+                // Xóa class active khỏi tất cả button
+                buttons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+
+                // Hiển thị tất cả nếu chọn "All Menu"
+                if (filter === "*") {
+                    items.forEach(item => item.parentElement.style.display = "block");
+                    return;
+                }
+
+                // Ẩn tất cả trước
+                items.forEach(item => item.parentElement.style.display = "none");
+
+                // Hiển thị các món thuộc danh mục được chọn
+                items.forEach(item => {
+                    if (item.parentElement.classList.contains(filter)) {
+                        item.parentElement.style.display = "block";
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+
+
+

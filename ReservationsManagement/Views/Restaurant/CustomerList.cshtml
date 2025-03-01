@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Customer Account List | Reg";
+    Layout = "AdminLayout";
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        <strong>Error:</strong> @ViewBag.ErrorMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="container-scroller">
+    <partial name="/Views/Shared/HeaderAdmin.cshtml" />
+    <partial name="/Views/Shared/LeftPageAdmin.cshtml" />
+
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Customer List</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Customer ID</th>
+                                        <th>Customer Name</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th>Activate/Deactivate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var customer in ViewBag.CustomerList as List<ReservationsManagement.Models.Customer>)
+                                    {
+                                        <tr>
+                                            <td>@customer.CustomerId</td>
+                                            <td>@customer.Name</td>
+                                            <td>@customer.Email</td>
+                                            <td>
+                                                @if (customer.Status == "Active")
+                                                {
+                                                    <span class="badge badge-success">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-danger">Deactivated</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (customer.Status == "Active")
+                                                {
+                                                    <form asp-action="DeactivateCustomer" asp-controller="Restaurant" method="post">
+                                                        <input type="hidden" name="customerId" value="@customer.CustomerId" />
+                                                        <button type="submit" class="btn btn-sm btn-danger">Deactivate</button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <form asp-action="ActivateCustomer" asp-controller="Restaurant" method="post">
+                                                        <input type="hidden" name="customerId" value="@customer.CustomerId" />
+                                                        <button type="submit" class="btn btn-sm btn-success">Activate</button>
+                                                    </form>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

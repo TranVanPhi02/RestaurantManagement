@@ -1,0 +1,100 @@
+﻿@model Order
+
+@{
+    ViewData["Title"] = "Order Detail | Reg";
+    Layout = "AdminLayout";
+}
+<div class="container-scroller">
+    <partial name="/Views/Shared/HeaderAdmin.cshtml" />
+
+    <partial name="/Views/Shared/LeftPageAdmin.cshtml" />
+
+    <!-- partial -->
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-sm-flex justify-content-between align-items-start">
+                            <div>
+                                <h4 class="card-title card-title-dash">Order Detail</h4>
+                                @if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string))
+                                {
+                                    <div class="alert alert-danger">
+                                        @TempData["ErrorMessage"]
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                      
+                                        <th>Customer Name</th>
+                                        <th>Phone Receiver</th>
+                                        <th>Time</th>
+                                        <th>Date</th>
+                                        <th>Number of Persons</th>
+                                        <th>Number of Children</th>
+                                        <th>Total Price</th>
+                                        <th>Status</th>
+                                      
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@(Model.Customer?.Name ?? "Unknown")</td>
+                                        <td>@Model.PhoneReceiver</td>
+                                        <td>@Model.Time</td>
+                                        <td>@Model.Date.ToString("yyyy-MM-dd")</td>
+                                        <td>@Model.NumberPerson</td>
+                                        <td>@Model.NumberChild</td>
+                                        <td>@Model.TotalPrice</td>
+                                        <td>
+                                            <span class="badge badge-@(Model.StatusOrder == "Pending" ? "warning" : "success")">@Model.StatusOrder</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <h4 class="mt-4">Order Items</h4>
+                          
+                            @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                            {
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Menu Item</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.OrderDetails)
+                                        {
+                                            <tr>
+                                                <td>@(item.Menu?.DishName ?? "Unknown")</td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.Price</td>
+                                                <td>@(item.Quantity * item.Price)</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p>No menu in this order.</p>
+                            }
+
+
+                            <a href="@Url.Action("OrderList", "Restaurant")" class="btn btn-secondary">Back to Order List</a>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
