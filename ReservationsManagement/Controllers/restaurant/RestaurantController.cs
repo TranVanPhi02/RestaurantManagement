@@ -425,6 +425,161 @@ namespace ReservationsManagement.Controllers.restaurant
                 return RedirectToAction("Dashboard");
             }
         }
+        // 1. Hiển thị danh sách món ăn
+        [HttpGet("menulist")]
+        public IActionResult MenuList()
+        {
+            if (!checkSession())
+                return RedirectToAction("Login");
+
+            var menus = _context.Menus.Include(m => m.CategoryMenu).Include(m => m.Restaurant).ToList();
+            return View(menus);
+        }
+
+        [HttpGet("menu/create")]
+        public IActionResult CreateMenu()
+        {
+            if (!checkSession())
+                return RedirectToAction("Login");
+
+            ViewBag.Categories = _context.CategoryMenus.ToList();  // Lấy danh mục từ CSDL
+            ViewBag.Restaurants = _context.Restaurants.ToList();   // Lấy danh sách nhà hàng
+
+            return View();
+        }
+
+        [HttpPost("menu/create")]
+        public IActionResult CreateMenu(Menu menu)
+        {
+            if (!checkSession())
+                return RedirectToAction("Login");
+
+            try
+            {
+                if (menu == null || string.IsNullOrEmpty(menu.DishName) || menu.Price <= 0 || menu.Quantity <= 0)
+                {
+                    TempData["ErrorMessage"] = "Invalid data! Please fill all required fields.";
+                    return RedirectToAction("CreateMenu");
+                }
+
+                _context.Menus.Add(menu);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Dish added successfully!";
+                return RedirectToAction("MenuList");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error creating dish!";
+                Console.WriteLine($"Error: {ex.Message}");
+                return RedirectToAction("CreateMenu");
+            }
+        }
+
+        // Hiển thị form chỉnh sửa món ăn
+        [HttpGet("menu/edit/{id}")]
+        public IActionResult EditMenu(int id)
+        {
+            if (!checkSession())
+                return RedirectToAction("Login");
+
+            var menu = _context.Menus.FirstOrDefault(m => m.MenuId == id);
+            if (menu == null)
+            {
+                TempData["ErrorMessage"] = "Dish not found!";
+                return RedirectToAction("MenuList");
+            }
+
+            // Load danh mục và nhà hàng
+            ViewBag.Categories = _context.CategoryMenus.ToList();
+            ViewBag.Restaurants = _context.Restaurants.ToList();
+
+            return View(menu);
+        }
+
+        // Xử lý cập nhật món ăn
+        [HttpPost("menu/edit")]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditMenu(Menu menu)
+        {
+            if (!checkSession())
+                return RedirectToAction("Login");
+
+            try
+            {
+                var existingMenu = _context.Menus.Find(menu.MenuId);
+                if (existingMenu == null)
+                {
+                    TempData["ErrorMessage"] = "Dish not found!";
+                    return RedirectToAction("MenuList");
+                }
+
+                // Cập nhật dữ liệu
+                existingMenu.DishName = menu.DishName;
+                existingMenu.Price = menu.Price;
+                existingMenu.Description = menu.Description;
+                existingMenu.Status = menu.Status;
+                existingMenu.CategoryMenuId = menu.CategoryMenuId;
+                existingMenu.RestaurantId = menu.RestaurantId;
+                existingMenu.Quantity = menu.Quantity;
+                existingMenu.Image = menu.Image;
+
+                _context.Menus.Update(existingMenu);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Dish updated successfully!";
+                return RedirectToAction("MenuList");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error updating dish!";
+                Console.WriteLine($"Error: {ex.Message}");
+                return RedirectToAction("MenuList");
+            }
+        }
+
+
+        [HttpGet("menu/confirm-delete/{id}")]
+        public IActionResult ConfirmDeleteMenu(int id)  // Phương thức GET để hiển thị xác nhận xóa
+        {
+            if (!checkSession())
+                return RedirectToAction("Login");
+
+            var menu = _context.Menus.Find(id);
+            if (menu == null)
+            {
+                TempData["ErrorMessage"] = "Dish not found!";
+                return RedirectToAction("MenuList");
+            }
+
+            return View(menu);
+        }
+
+        [HttpPost("menu/delete/{id}")]
+        public IActionResult DeleteMenuConfirmed(int id)  // Phương thức POST để thực hiện xóa
+        {
+            if (!checkSession())
+                return RedirectToAction("Login");
+
+            try
+            {
+                var menu = _context.Menus.Find(id);
+                if (menu == null)
+                {
+                    TempData["ErrorMessage"] = "Dish not found!";
+                    return RedirectToAction("MenuList");
+                }
+
+                _context.Menus.Remove(menu);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Dish deleted successfully!";
+                return RedirectToAction("MenuList");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error deleting dish!";
+                Console.WriteLine($"Error: {ex.Message}");
+                return RedirectToAction("MenuList");
+            }
+        }
 
     }
 }

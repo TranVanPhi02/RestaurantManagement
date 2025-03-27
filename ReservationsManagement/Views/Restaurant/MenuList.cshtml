@@ -1,0 +1,65 @@
+﻿@model List<ReservationsManagement.Models.Menu>
+
+@{
+    ViewData["Title"] = "Menu List";
+    Layout = "AdminLayout";
+}
+
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string))
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+
+<div class="container-scroller">
+    <partial name="/Views/Shared/HeaderAdmin.cshtml" />
+    <partial name="/Views/Shared/LeftPageAdmin.cshtml" />
+
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Menu List</h4>
+                        <a href="@Url.Action("CreateMenu", "Restaurant")" class="btn btn-success mb-3">Add New Dish</a>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Dish Name</th>
+                                        <th>Price</th>
+                                        <th>Category</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var menu in Model)
+                                    {
+                                        <tr>
+                                            <td>@menu.MenuId</td>
+                                            <td>@menu.DishName</td>
+                                            <td>@menu.Price</td>
+                                            <td>@(menu.CategoryMenu?.CategoryMenuName ?? "N/A")</td>
+                                            <td>
+                                                <a href="@Url.Action("EditMenu", "Restaurant", new { id = menu.MenuId })" class="btn btn-primary btn-sm">Edit</a>
+                                                <a href="@Url.Action("ConfirmDeleteMenu", "Restaurant", new { id = menu.MenuId })" class="btn btn-danger">Delete</a>
+                                                >
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

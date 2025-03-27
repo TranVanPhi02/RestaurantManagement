@@ -1,0 +1,21 @@
+﻿@model ReservationsManagement.Models.Menu
+
+@{
+    ViewData["Title"] = "Delete Menu";
+    Layout = "AdminLayout";
+}
+
+<div class="container">
+    <partial name="/Views/Shared/HeaderAdmin.cshtml" />
+    <partial name="/Views/Shared/LeftPageAdmin.cshtml" />
+    <h2>Are you sure you want to delete this dish?</h2>
+
+    <p><strong>@Model.DishName</strong> - Price: @Model.Price</p>
+
+    <form asp-action="DeleteMenuConfirmed" asp-controller="Restaurant" method="post">
+        <input type="hidden" name="id" value="@Model.MenuId" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="@Url.Action("MenuList", "Restaurant")" class="btn btn-secondary">Cancel</a>
+    </form>
+
+</div>
